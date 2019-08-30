@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>尚德会计资讯</title>
-    <link>/yinyanan.github.io/</link>
+    <link>/</link>
     <description>Recent content on 尚德会计资讯</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 29 Aug 2019 10:35:58 +0800</lastBuildDate>
     
-	<atom:link href="/yinyanan.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>第一篇文章</title>
-      <link>/yinyanan.github.io/post/first/</link>
+      <link>/post/first/</link>
       <pubDate>Thu, 29 Aug 2019 10:35:58 +0800</pubDate>
       
-      <guid>/yinyanan.github.io/post/first/</guid>
+      <guid>/post/first/</guid>
       <description>单标签纯CSS实现动态天气 1 引言 本期分享一个有趣的实例：如何仅用CSS3，实现单标签的动态晴阴雨雪。技术关键点就是“单标签”和“纯CSS”。先看下最终效果：
 再看看HTML代码：
 &amp;lt;!--晴--&amp;gt; &amp;lt;div class=&amp;quot;weather sunny&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!--阴--&amp;gt; &amp;lt;div class=&amp;quot;weather cloudy&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!--雨--&amp;gt; &amp;lt;div class=&amp;quot;weather rainy&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!--雪--&amp;gt; &amp;lt;div class=&amp;quot;weather snowy&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;  涉及到的关键CSS3属性：
@@ -29,10 +29,10 @@
     
     <item>
       <title>About</title>
-      <link>/yinyanan.github.io/about/</link>
+      <link>/about/</link>
       <pubDate>Thu, 29 Aug 2019 10:34:55 +0800</pubDate>
       
-      <guid>/yinyanan.github.io/about/</guid>
+      <guid>/about/</guid>
       <description></description>
     </item>
     
