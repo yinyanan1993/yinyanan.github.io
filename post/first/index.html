@@ -1,0 +1,584 @@
+<!doctype html>
+
+
+
+ <html class="no-js" lang=""> 
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>第一篇文章</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="INDEX, FOLLOW">
+        <link rel="stylesheet" href="./css/normalize.min.css">
+        <link rel="stylesheet" href="./css/main.css">
+        
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+            
+            <script>hljs.initHighlightingOnLoad();</script>
+        
+    </head>
+    <body>
+        
+        <div class="header-container">
+            <header class="wrapper clearfix">
+               <a href="."> <h1 class="title">尚德会计资讯</h1></a>
+            </header>
+        </div>
+
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+  
+    <article>
+        <header> 
+            <h1><a href="./post/first/">第一篇文章</a></h1>
+        </header>
+        
+
+<h1 id="单标签纯css实现动态天气">单标签纯CSS实现动态天气</h1>
+
+<h2 id="1-引言">1 引言</h2>
+
+<p>本期分享一个有趣的实例：如何仅用CSS3，实现单标签的动态晴阴雨雪。技术关键点就是“单标签”和“纯CSS”。先看下最终效果：</p>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0b134bc8088f?imageslim" alt="img" /></p>
+
+<p>再看看HTML代码：</p>
+
+<pre><code class="language-html">&lt;!--晴--&gt;
+&lt;div class=&quot;weather sunny&quot;&gt;&lt;/div&gt;
+&lt;!--阴--&gt;
+&lt;div class=&quot;weather cloudy&quot;&gt;&lt;/div&gt;
+&lt;!--雨--&gt;
+&lt;div class=&quot;weather rainy&quot;&gt;&lt;/div&gt;
+&lt;!--雪--&gt;
+&lt;div class=&quot;weather snowy&quot;&gt;&lt;/div&gt;
+</code></pre>
+
+<p>涉及到的关键CSS3属性：</p>
+
+<blockquote>
+<ol>
+<li>transform：用于移位、旋转、缩放效果 translate()  \ scale(0.8) \ rotate() \ skew()</li>
+<li>box-shadow：利用投影实现图像的复制(关键！)</li>
+<li>clip-path：基于绘制的形状对元素进行遮罩处理</li>
+<li>animation：设置元素的动画</li>
+</ol>
+</blockquote>
+
+<p>以及实现单标签最关键的:before、:after伪类运用。</p>
+
+<p>下面开始逐个讲解。</p>
+
+<h2 id="2-基础背景">2 基础背景</h2>
+
+<p>图中的蓝块背景区域，设置了区域的宽高、背景色和圆角效果。</p>
+
+<pre><code class="language-css">.weather {
+    position: relative;
+    display: inline-block;
+    width: 180px;
+    height: 240px;
+    background: #23b7e5;
+    border-radius: 8px;
+}
+</code></pre>
+
+<h2 id="3-晴天">3 晴天</h2>
+
+<dl>
+<dt>晴天图标由两个元素组成：太阳和内六角形阳光。</dt>
+</dl>
+
+<p>:before、:after 两个伪类可以在元素内部分别“添加”一个元素。</p>
+
+<h3 id="3-1-绘制太阳">3.1 绘制太阳</h3>
+
+<p>首先，用 :before实现太阳。</p>
+
+<pre><code class="language-css">.sunny:before {
+    content: &quot;&quot;;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: #F6D963;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #ff0;
+    z-index: 2;
+}
+</code></pre>
+
+<p>content用来生成一个元素。</p>
+
+<p>position、top、left、transform用来实现中心居中。</p>
+
+<p>box-shadow实现外发光效果，这只是box-shadow最基本最常用的使用方式。</p>
+
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79ly1g52np5m642j307r0a83yd.jpg" alt="" /></p>
+
+<h3 id="3-2-绘制内六角形">3.2 绘制内六角形</h3>
+
+<p>用 :after实现内六角形。</p>
+
+<p>实现的关键就是使用遮罩。通过clip-path绘制一个内六角形。这就变成了一个简单的初中几何问题。</p>
+
+<p>内六角形由两个等边三角形拼合而成。</p>
+
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79ly1g52np5o1qsj30xc0b4aac.jpg" alt="" /></p>
+
+<p>合并之后，我们可以把整体划分为若干个完全相同的小等边三角形。</p>
+
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79ly1g52np5juixj30u00usmzf.jpg" alt="" /></p>
+
+<p>在垂直方向做个辅助线，连接中间顶部和底部两点。设小等边三角形的边长为1，以内六角形中心为坐标原点，可以计算出每个点的坐标，如下：</p>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0b3a7569a523?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img" /></p>
+
+<p>为了使用clip-path的百分比定位来绘制图像，下一步需要把长度坐标转换为百分比坐标。</p>
+
+<p>设垂直方向最大长度为100%。由于clip-path绘制原点是在左上角，x轴右侧为正值，y轴下方为正值。需要做下坐标系转换，每个点的坐标值转换如下：</p>
+
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79ly1g52np57tsrj30zs0qedjk.jpg" alt="" /></p>
+
+<p>使用clip-path的polygon方法绘制内六角形，坐标已通过上面的步骤计算出来了。</p>
+
+<p>样式代码如下：</p>
+
+<pre><code class="language-css">.sunny:after {
+    content: &quot;&quot;;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -45px 0 0 -45px;
+    width: 90px;
+    height: 90px;
+    background: #FFEB3B;
+    clip-path: polygon(
+    	50% 0%,
+        65.43% 25%,
+        93.3% 25%,
+        78.87% 50%,
+        93.3% 75%,
+        64.43% 75%,
+        50% 100%,
+        35.57% 75%,
+        6.7% 75%,
+        21.13% 50%,
+        6.7% 25%,
+        35.57% 25%);
+    z-index: 1;
+    animation: sunScale 2s linear infinite;
+}
+@keyframes sunScale {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+    	  transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+</code></pre>
+
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79ly1g52np4muidj30fk0kijrs.jpg" alt="img" /></p>
+
+<p>实现原理就是通过clip-path绘制了一个内六角形遮罩，把黄颜色背景通过遮罩变成了最终的内六角形。</p>
+
+<p>animation通过关键帧动画实现了“放大缩小”交替动效。</p>
+
+<p>最终效果：</p>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0ba7e0967074?imageslim" alt="img" /></p>
+
+<h2 id="4-阴天">4 阴天</h2>
+
+<p>观察图形发现，有两个云朵：前面的白云和后面的乌云。貌似需要分别用 :before和 :after实现。如果这样做的话，后续章节的雨天和雪天的雨雪元素就没有多余的伪类可用了。所以只能用一个伪类实现两朵云。 这里就用到了box-shadow的“影分身”了！</p>
+
+<p>由于后续章节的雨天和雪天都复用了云的样式，所以写在一起，代码如下：</p>
+
+<pre><code class="language-css">.cloudy:before,
+.rainy:before,
+.snowy:before {
+    content: &quot;&quot;;
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border-radius: 50%;
+    z-index: 2;
+}
+</code></pre>
+
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79ly1g52np4kkwhj30fg0ki74m.jpg" alt="" /></p>
+
+<p>真实的元素（真身）就是一个圆。通过box-shodow来把投影作为“分身”。</p>
+
+<p>先来看看box-shadow的属性：</p>
+
+<blockquote>
+<p>box-shadow: h-shadow v-shadow blur spread color inset;
+ 参数详解：
+ h-shadow: 阴影的水平偏移量。
+ v-shadow: 阴影的垂直偏移量。
+ blur: 模糊距离(就是渐变的距离，设为0就没有渐变)。
+ spread: 投影的尺寸，通过这个控制“影分身”的大小。
+ color: 投影颜色，通过这个实现后方的乌云。
+ inset: 改为内阴影。这里用不到。</p>
+</blockquote>
+
+<p>先复制一个影分身试试：</p>
+
+<pre><code class="language-css">box-shadow: #fff 22px -15px 0 6px;
+</code></pre>
+
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79ly1g52np4i276j30fc0keq3a.jpg" alt="" /></p>
+
+<p>继续复制多个影分身，带全部影分身的完整代码如下：</p>
+
+<pre><code class="language-css">.cloudy:before,
+.rainy:before,
+.snowy:before {
+    content: &quot;&quot;;
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow:
+    	#fff 22px -15px 0 6px,
+    	#fff 57px -6px 0 2px,
+    	#fff 87px 4px 0 -4px,
+    	#fff 33px 6px 0 6px,
+    	#fff 61px 6px 0 2px,
+    	#ccc 29px -23px 0 6px,
+    	#ccc 64px -14px 0 2px,
+    	#ccc 94px -4px 0 -4px;
+    z-index: 2;
+}
+</code></pre>
+
+<p>五个分身的白圆（#fff）,三个分身的灰圆（#ccc）拼成了两朵云。</p>
+
+<p>再给云朵加上“上下浮动”的动效：</p>
+
+<pre><code class="language-css">.cloudy:before {
+    animation: cloudMove 2s linear infinite;
+}
+@keyframes cloudMove {
+    0% {
+        transform: translate(-50%, -50%);
+    }
+    50% {
+        transform: translate(-50%, -60%);
+    }
+    100% {
+        transform: translate(-50%, -50%);
+    }
+}
+</code></pre>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0c61044c0ff9?imageslim" alt="img" /></p>
+
+<h2 id="5-雨天">5 雨天</h2>
+
+<p>云朵的代码直接复用第4章的阴天。这里使用 :after 伪类实现雨滴。</p>
+
+<p>先实现一个雨滴（为方便观看，暂时隐藏云朵）：</p>
+
+<pre><code class="language-css">.rainy:after {
+	content: &quot;&quot;;
+    position: absolute;
+    top:50%;
+    left: 25%;
+    width: 4px;
+    height: 14px;
+    background: #fff;
+    border-radius: 2px;
+}
+</code></pre>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0c65ddc32a58?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img" /></p>
+
+<p>然后通过box-shadow“影分身”：</p>
+
+<pre><code>    .rainy:after {
+	    content: &quot;&quot;;
+        position: absolute;
+        top:50%;
+        left: 25%;
+        width: 4px;
+        height: 14px;
+        background: #fff;
+        border-radius: 2px;
++       box-shadow:
++    	    #fff 25px -10px 0,
++    	    #fff 50px 0 0,
++    	    #fff 75px -10px 0,
++    	    #fff 0 25px 0,
++    	    #fff 25px 15px 0,
++    	    #fff 50px 25px 0,
++    	    #fff 75px 15px 0,
++    	    #fff 0 50px 0,
++    	    #fff 25px 40px 0,
++    	    #fff 50px 50px 0,
++    	    #fff 75px 40px 0;
+    }
+</code></pre>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0c6c1f36abae?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img" /></p>
+
+<p>再加入下雨的移动动效，修改如下：</p>
+
+<pre><code class="language-css">    .rainy:after {
+        ...(略)
++        animation: rainDrop 2s linear infinite;
+    }
++   @keyframes rainDrop {
++       0% {
++           transform: translate(0, 0) rotate(10deg);
++       }
++       100% {
++           transform: translate(-4px, 24px) rotate(10deg);
++           box-shadow:
++           #fff 25px -10px 0,
++           #fff 50px 0 0,
++           #fff 75px -10px 0,
++           #fff 0 25px 0,
++           #fff 25px 15px 0,
++           #fff 50px 25px 0,
++           #fff 75px 15px 0,
++           rgba(255, 255, 255, 0) 0 50px 0,
++           rgba(255, 255, 255, 0) 25px 40px 0,
++           rgba(255, 255, 255, 0) 50px 50px 0,
++           rgba(255, 255, 255, 0) 75px 40px 0;
++       }
++   }
+</code></pre>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0c763481102b?imageslim" alt="img" /></p>
+
+<p>动画添加了10度的旋转，让雨滴倾斜，以及垂直方向的移动。</p>
+
+<p>这里的关键就是：虽然本质是垂直移动，但为了看上去是“循环”效果，需要将最下面的雨滴进行透明渐变，同时调节X和Y轴的值，让最终位置正好跟初始位置重合，就不会显得“断开”。</p>
+
+<p>我们生成的是三行雨滴，第一行被云朵挡住了，实际能看到的是下面两行。在第一行移动到第二行位置的时候，原第三行已经透明看不见了，正好与初始状态一样，实现了无缝循环拼接。</p>
+
+<h2 id="6-雪天">6 雪天</h2>
+
+<p>雪天与雨天的区别就是把雨滴换成圆形，取消旋转角度。 代码如下：</p>
+
+<pre><code class="language-css">.snowy:after {
+    content: &quot;&quot;;
+    position: absolute;
+    top:50%;
+    left: 25%;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow:
+        #fff 25px -10px 0,
+        #fff 50px 0 0,
+        #fff 75px -10px 0,
+        #fff 0 25px 0,
+        #fff 25px 15px 0,
+        #fff 50px 25px 0,
+        #fff 75px 15px 0,
+        #fff 0 50px 0,
+        #fff 25px 40px 0,
+        #fff 50px 50px 0,
+        #fff 75px 40px 0;
+    animation: snowDrop 2s linear infinite;
+}
+@keyframes snowDrop {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(25px);
+        box-shadow:
+        #fff 25px -10px 0,
+        #fff 50px 0 0,
+        #fff 75px -10px 0,
+        #fff 0 25px 0,
+        #fff 25px 15px 0,
+        #fff 50px 25px 0,
+        #fff 75px 15px 0,
+        rgba(255, 255, 255, 0) 0 50px 0,
+        rgba(255, 255, 255, 0) 25px 40px 0,
+        rgba(255, 255, 255, 0) 50px 50px 0,
+        rgba(255, 255, 255, 0) 75px 40px 0;
+    }
+}
+</code></pre>
+
+<p><img src="https://user-gold-cdn.xitu.io/2019/7/11/16be0c7c4ca14f02?imageslim" alt="img" /></p>
+
+<h2 id="7-雷电">7 雷电</h2>
+
+<p>跟着原作者的方法我们实现了四个天气，下面结合以上知识点仿写一个雷电效果。</p>
+
+<pre><code class="language-html">&lt;div class=&quot;weather lightning&quot;&gt;&lt;/div&gt;
+</code></pre>
+
+<p>雷电天气由两部分组成：乌云和闪电。首先沿用阴雨天的乌云样式：</p>
+
+<pre><code class="language-css">.lightning:before {
+    content: &quot;&quot;;
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow:
+    	#fff 22px -15px 0 6px,
+    	#fff 57px -6px 0 2px,
+    	#fff 87px 4px 0 -4px,
+    	#fff 33px 6px 0 6px,
+    	#fff 61px 6px 0 2px,
+    	#ccc 29px -23px 0 6px,
+    	#ccc 64px -14px 0 2px,
+    	#ccc 94px -4px 0 -4px;
+    z-index: 2;
+}
+</code></pre>
+
+<p>下面实现一个闪电。</p>
+
+<p>百度了一个闪电的图片。</p>
+
+<p><img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3397791924,824852813&amp;fm=27&amp;gp=0.jpg" alt="img" /></p>
+
+<p>观察闪电图形，可以把它看做从菱形中裁掉两个三角形，并且这个菱形可以由矩形形变而来</p>
+
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79ly1g52on0dgxwj30qo08c0tb.jpg" alt="" /></p>
+
+<p>参考太阳六角星的绘制方式，我们使用clip-path 裁切。为了方便计算，矩形尝试给了3:4的比例，并且关键点设在了对角线垂线交叉点。最终的图形可以通过css形变获得。计算各个点得到坐标如下：</p>
+
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79ly1g52p0muhpyj30qm0komyl.jpg" alt="" /></p>
+
+<p>css代码：</p>
+
+<pre><code class="language-css">.lightning:after{
+    content: &quot;&quot;;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 25px 0 0 -20px;
+    width: 40px;
+    height: 30px;
+    background: #FFEB3B;
+    z-index: 3;
+    clip-path: polygon(
+       	0% 0%,
+        100% 0%,
+        64% 36%,
+        100% 100%,
+        0% 100%,
+        36% 64%);
+}
+</code></pre>
+
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79ly1g52p5f4yqdj30ag0dkq33.jpg" alt="" /></p>
+
+<p>基本样式已经出来了，下面给闪电加上形变。使用了X轴翻转使其倾斜成菱形，再旋转调整角度</p>
+
+<pre><code>transform: rotate(-60deg) skewX(-40deg);
+</code></pre>
+
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79ly1g52pccwhmpj30aa0diaa9.jpg" alt="" /></p>
+
+<p>最后给闪电加上动画。这里我们需要让实现“一闪一闪”的效果。经过一番试验和调整，最终结果如下：</p>
+
+<pre><code class="language-css">
+{
+
+  animation: lightBling 3s linear infinite;
+}
+
+@keyframes lightBling {
+    0% {
+      opacity: 1;
+    }
+    20%{
+      opacity: 1;
+    }
+    25%{
+      opacity: 0;
+    }
+    30%{
+      opacity: 0;
+    }
+    35%{
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+    }
+    55% {
+      opacity: 0;
+    }
+    70%{
+      opacity: 0;
+    }
+    72%{
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(-60deg) skewX(-40deg) translate(-2px,2px);
+    }
+}
+</code></pre>
+
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79ly1g52pnbmy45g305k07ek02.gif" alt="" /></p>
+
+<h2 id="8-总结">8 总结</h2>
+
+<p>五个天气最终效果对比</p>
+
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79ly1g52pspyoghg30qc06y4qp.gif" alt="" /></p>
+
+        </article>
+              <aside>
+                    <h3>更多资源</h3>
+                    <ul>
+                        
+                        
+                        <li>
+                            <a href="./post/first/">第一篇文章</a>
+                        </li>
+                        
+                    </ul>
+                </aside>
+    
+
+
+           </div> 
+        </div> 
+       
+        <div class="footer-container">
+            <footer class="wrapper">
+                       <a href="."><h3>尚德会计资讯</h3></a>
+            </footer>
+        </div>
+
+    </body>
+</html>
