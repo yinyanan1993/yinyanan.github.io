@@ -6,9 +6,35 @@
     <description>Recent content on 尚德会计资讯</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
+    <lastBuildDate>Thu, 29 Aug 2019 10:35:58 +0800</lastBuildDate>
     
 	<atom:link href="/yinyanan.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>第一篇文章</title>
+      <link>/yinyanan.github.io/post/first/</link>
+      <pubDate>Thu, 29 Aug 2019 10:35:58 +0800</pubDate>
+      
+      <guid>/yinyanan.github.io/post/first/</guid>
+      <description>单标签纯CSS实现动态天气 1 引言 本期分享一个有趣的实例：如何仅用CSS3，实现单标签的动态晴阴雨雪。技术关键点就是“单标签”和“纯CSS”。先看下最终效果：
+再看看HTML代码：
+&amp;lt;!--晴--&amp;gt; &amp;lt;div class=&amp;quot;weather sunny&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!--阴--&amp;gt; &amp;lt;div class=&amp;quot;weather cloudy&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!--雨--&amp;gt; &amp;lt;div class=&amp;quot;weather rainy&amp;quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;!--雪--&amp;gt; &amp;lt;div class=&amp;quot;weather snowy&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;  涉及到的关键CSS3属性：
+  transform：用于移位、旋转、缩放效果 translate() \ scale(0.8) \ rotate() \ skew() box-shadow：利用投影实现图像的复制(关键！) clip-path：基于绘制的形状对元素进行遮罩处理 animation：设置元素的动画   以及实现单标签最关键的:before、:after伪类运用。
+下面开始逐个讲解。
+2 基础背景 图中的蓝块背景区域，设置了区域的宽高、背景色和圆角效果。
+.weather { position: relative; display: inline-block; width: 180px; height: 240px; background: #23b7e5; border-radius: 8px; }  3 晴天  晴天图标由两个元素组成：太阳和内六角形阳光。  :before、:after 两个伪类可以在元素内部分别“添加”一个元素。
+3.1 绘制太阳 首先，用 :before实现太阳。</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/yinyanan.github.io/about/</link>
+      <pubDate>Thu, 29 Aug 2019 10:34:55 +0800</pubDate>
+      
+      <guid>/yinyanan.github.io/about/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>
